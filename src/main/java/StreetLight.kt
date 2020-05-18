@@ -1,2 +1,3 @@
-class StreetLight {
+class StreetLight(private val connectionString: String) {
+
 }
