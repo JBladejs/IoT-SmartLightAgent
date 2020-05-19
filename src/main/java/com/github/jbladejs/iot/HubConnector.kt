@@ -4,7 +4,6 @@ import com.github.jbladejs.iot.tools.Data
 import com.github.jbladejs.iot.tools.LockObject
 import com.google.gson.Gson
 import com.microsoft.azure.sdk.iot.device.*
-import kotlin.random.Random
 
 internal class HubConnector(connectionString: String) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)

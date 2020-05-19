@@ -1,8 +1,6 @@
 package com.github.jbladejs.iot
 
 import com.github.jbladejs.iot.tools.Data
-import kotlin.random.Random
-
 
 class StreetLight(connectionString: String, private val driver: Driver) {
     private val connector = HubConnector(connectionString)
