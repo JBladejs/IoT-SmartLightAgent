@@ -1,6 +1,6 @@
 package com.github.jbladejs.iot
 
-import com.github.jbladejs.iot.tools.Data
+import com.github.jbladejs.iot.tools.TelemetryData
 
 class StreetLight(connectionString: String, private val driver: Driver) {
     private val connector = HubConnector(connectionString)
@@ -8,7 +8,7 @@ class StreetLight(connectionString: String, private val driver: Driver) {
     fun sendMessages(number: Int, interval: Long) {
         println("Sending messages...")
         for (i in 1..number) {
-            connector.sendMessage(Data(driver.getEnergyUsage(), driver.getEnergyUsage()), interval)
+            connector.sendMessage(TelemetryData(driver.getEnergyUsage(), driver.getEnergyUsage()), interval)
         }
         println("Messages successfully sent!")
     }

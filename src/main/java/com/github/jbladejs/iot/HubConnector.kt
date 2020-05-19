@@ -1,6 +1,6 @@
 package com.github.jbladejs.iot
 
-import com.github.jbladejs.iot.tools.Data
+import com.github.jbladejs.iot.tools.TelemetryData
 import com.github.jbladejs.iot.tools.LockObject
 import com.google.gson.Gson
 import com.microsoft.azure.sdk.iot.device.*
@@ -19,11 +19,11 @@ internal class HubConnector(connectionString: String) {
         println("Device successfully started!")
     }
 
-    fun sendMessage(data: Data, interval: Long) {
-        val message = Gson().toJson(data)
+    fun sendMessage(data: TelemetryData, interval: Long) {
+        val message = data.serialize()
         val eventMessage = Message(message)
         println("Sending message: $message")
-        eventMessage.setProperty("LightIntensityAlert", if (data.lightIntensity > 100) "true" else "false")
+        eventMessage.setProperty("LightOn", if (data.lightIntensity > 100) "true" else "false")
         val lock = LockObject()
         client.sendEventAsync(eventMessage, EventCallback, lock)
         lock.await()
