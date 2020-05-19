@@ -5,14 +5,14 @@ import com.github.jbladejs.iot.tools.LockObject
 import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 
-internal open class HubConnector(connectionString: String, val device : StreetLight) {
+internal open class HubConnector(connectionString: String, device : StreetLight) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
 
     init{
         println("Starting device...")
         try {
             client.open()
-            client.subscribeToDeviceMethod(DirectMethodCallback(), null, DirectMethodStatusCallback(), null)
+            client.subscribeToDeviceMethod(DirectMethodCallback(device), null, DirectMethodStatusCallback(), null)
         } catch (ex: Exception) {
             error("Error when starting device!")
             ex.printStackTrace()
