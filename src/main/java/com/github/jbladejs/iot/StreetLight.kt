@@ -1,15 +1,11 @@
 package com.github.jbladejs.iot
 
 import com.google.gson.Gson
-import com.microsoft.azure.sdk.iot.device.DeviceClient
-import com.microsoft.azure.sdk.iot.device.IotHubClientProtocol
-import com.microsoft.azure.sdk.iot.device.IotHubEventCallback
-import com.microsoft.azure.sdk.iot.device.Message
-import java.lang.Exception
+import com.microsoft.azure.sdk.iot.device.*
+import java.lang.IllegalArgumentException
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.random.Random
-import kotlinx.coroutines.*
-import kotlin.system.*
-
 
 
 class StreetLight(private val connectionString: String) {
@@ -26,25 +22,35 @@ class StreetLight(private val connectionString: String) {
         println("Device successfully started!")
     }
 
-    fun sendMessages(number: Int, delay: Long) {
+    fun sendMessages(number: Int, interval: Long) {
         println("Sending messages...")
-        runBlocking {
-            for (i in 1..number) {
-                sendData(Data(Random.nextInt(50,60), Random.nextInt(0, 200)), delay)
-            }
+        for (i in 1..number) {
+            sendMessage(Data(Random.nextInt(50,60), Random.nextInt(0, 200)), interval)
         }
         println("Messages successfully sent!")
     }
 
-    suspend fun sendData(data: Data, delay: Long) {
+    fun sendMessage(data: Data, interval: Long) {
         val message = Gson().toJson(data)
         val eventMessage = Message(message)
         println("Sending message: $message")
         eventMessage.setProperty("LightIntensityAlert", if (data.lightIntensity > 100) "true" else "false")
-        client.sendEventAsync(eventMessage, null, null)
-
-        delay(delay)
+        val lock = ReentrantLock()
+        val condition = lock.newCondition()
+        client.sendEventAsync(eventMessage, EventCallback, lock)
+        lock.withLock { condition.await() }
+        Thread.sleep(interval)
     }
 
     fun closeConnection() = client.closeNow()
+
+    private object EventCallback : IotHubEventCallback {
+        override fun execute(status: IotHubStatusCode, context: Any) {
+            println("IoT Hub responded to message with status: " + status.name)
+            if (context !is ReentrantLock) throw IllegalArgumentException()
+            val condition = context.newCondition()
+            synchronized(context) { condition.signal() }
+        }
+    }
+
 }
