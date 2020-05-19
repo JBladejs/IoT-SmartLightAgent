@@ -1,4 +1,4 @@
-package com.github.jbladejs.iot
+package com.github.jbladejs.iot.tools
 
 import java.io.File
 

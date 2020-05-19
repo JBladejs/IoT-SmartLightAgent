@@ -1,11 +1,13 @@
 package com.github.jbladejs.iot
 
+import com.github.jbladejs.iot.tools.Data
+import com.github.jbladejs.iot.tools.LockObject
 import com.google.gson.Gson
 import com.microsoft.azure.sdk.iot.device.*
 import kotlin.random.Random
 
 
-class StreetLight(private val connectionString: String) {
+class StreetLight(connectionString: String) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
 
     init{
@@ -22,7 +24,7 @@ class StreetLight(private val connectionString: String) {
     fun sendMessages(number: Int, interval: Long) {
         println("Sending messages...")
         for (i in 1..number) {
-            sendMessage(Data(Random.nextInt(50,60), Random.nextInt(0, 200)), interval)
+            sendMessage(Data(Random.nextInt(50, 60), Random.nextInt(0, 200)), interval)
         }
         println("Messages successfully sent!")
     }
