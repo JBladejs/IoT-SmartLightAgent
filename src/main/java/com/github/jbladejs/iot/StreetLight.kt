@@ -10,6 +10,8 @@ import kotlin.random.Random
 import kotlinx.coroutines.*
 import kotlin.system.*
 
+
+
 class StreetLight(private val connectionString: String) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
 
@@ -35,7 +37,9 @@ class StreetLight(private val connectionString: String) {
     }
 
     suspend fun sendData(data: Data, delay: Long) {
-        val eventMessage = Message(Gson().toJson(data))
+        val message = Gson().toJson(data)
+        val eventMessage = Message(message)
+        println("Sending message: $message")
         eventMessage.setProperty("LightIntensityAlert", if (data.lightIntensity > 100) "true" else "false")
         client.sendEventAsync(eventMessage, null, null)
 
