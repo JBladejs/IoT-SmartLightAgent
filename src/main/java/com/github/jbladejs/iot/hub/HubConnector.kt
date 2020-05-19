@@ -1,17 +1,18 @@
-package com.github.jbladejs.iot
+package com.github.jbladejs.iot.hub
 
-import com.github.jbladejs.iot.tools.TelemetryData
+import com.github.jbladejs.iot.StreetLight
 import com.github.jbladejs.iot.tools.LockObject
-import com.google.gson.Gson
+import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 
-internal class HubConnector(connectionString: String) {
+internal open class HubConnector(connectionString: String, val device : StreetLight) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
 
     init{
         println("Starting device...")
         try {
             client.open()
+            client.subscribeToDeviceMethod(DirectMethodCallback(), null, DirectMethodStatusCallback(), null)
         } catch (ex: Exception) {
             error("Error when starting device!")
             ex.printStackTrace()
@@ -37,6 +38,12 @@ internal class HubConnector(connectionString: String) {
             println("IoT Hub responded to message with status: " + status.name)
             val lock = context as LockObject
             lock.signal()
+        }
+    }
+
+    private class DirectMethodStatusCallback : IotHubEventCallback {
+        override fun execute(status: IotHubStatusCode, context: Any) {
+            println("Direct method # IoT Hub responded to device method acknowledgement with status: " + status.name)
         }
     }
 }
