@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.microsoft.azure.sdk.iot.device.*
 import kotlin.random.Random
 
-class HubConnector(connectionString: String) {
+internal class HubConnector(connectionString: String) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
 
     init{

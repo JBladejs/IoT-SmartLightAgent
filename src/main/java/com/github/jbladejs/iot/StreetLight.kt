@@ -15,4 +15,8 @@ class StreetLight(connectionString: String, private val driver: Driver) {
         println("Messages successfully sent!")
     }
 
+    fun closeHubConnection() {
+        connector.closeConnection()
+    }
+
 }
