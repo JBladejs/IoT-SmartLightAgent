@@ -35,10 +35,9 @@ class StreetLight(private val connectionString: String) {
         val eventMessage = Message(message)
         println("Sending message: $message")
         eventMessage.setProperty("LightIntensityAlert", if (data.lightIntensity > 100) "true" else "false")
-        val lock = ReentrantLock()
-        val condition = lock.newCondition()
+        val lock = Object()
         client.sendEventAsync(eventMessage, EventCallback, lock)
-        lock.withLock { condition.await() }
+        synchronized(lock) { lock.wait() }
         Thread.sleep(interval)
     }
 
@@ -47,9 +46,8 @@ class StreetLight(private val connectionString: String) {
     private object EventCallback : IotHubEventCallback {
         override fun execute(status: IotHubStatusCode, context: Any) {
             println("IoT Hub responded to message with status: " + status.name)
-            if (context !is ReentrantLock) throw IllegalArgumentException()
-            val condition = context.newCondition()
-            synchronized(context) { condition.signal() }
+            val lock = context as Object
+            synchronized(lock) { lock.notify() }
         }
     }
 
