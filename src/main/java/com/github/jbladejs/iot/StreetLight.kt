@@ -2,9 +2,6 @@ package com.github.jbladejs.iot
 
 import com.google.gson.Gson
 import com.microsoft.azure.sdk.iot.device.*
-import java.lang.IllegalArgumentException
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 import kotlin.random.Random
 
 
@@ -30,7 +27,7 @@ class StreetLight(private val connectionString: String) {
         println("Messages successfully sent!")
     }
 
-    fun sendMessage(data: Data, interval: Long) {
+    private fun sendMessage(data: Data, interval: Long) {
         val message = Gson().toJson(data)
         val eventMessage = Message(message)
         println("Sending message: $message")
