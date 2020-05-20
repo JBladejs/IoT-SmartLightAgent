@@ -6,7 +6,7 @@ import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property
 
-internal class HubConnector(connectionString: String, device : StreetLight) {
+internal class HubConnector(connectionString: String, val device : StreetLight) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
     private val dataCollector = DataCollector(this)
 
