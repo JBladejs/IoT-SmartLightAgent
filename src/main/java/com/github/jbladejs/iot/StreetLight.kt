@@ -44,6 +44,16 @@ class StreetLight(connectionString: String, private val driver: Driver) {
         }
     }
 
+    fun turnOn() {
+        automaticMode = false
+        driver.turnOnTheLight()
+    }
+
+    fun turnOff() {
+        automaticMode = false
+        driver.turnOffTheLight()
+    }
+
     fun closeHubConnection() {
         runner.shuttingDown = true
         executor.shutdownNow()

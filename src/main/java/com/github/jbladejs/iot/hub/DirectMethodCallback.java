@@ -18,30 +18,33 @@ class DirectMethodCallback implements DeviceMethodCallback
         this.device = device;
     }
 
-    private void sendMessages(int number, int interval) {
-        System.out.println("Direct method initiated # Sending messages: " + number);
+    private void turnOnLight() {
+        device.turnOn();
+    }
+
+    private void turnOffLight() {
+        device.turnOff();
     }
 
     @Override
     public DeviceMethodData call(String methodName, Object methodData, Object context)
     {
         DeviceMethodData deviceMethodData;
-        String payload = new String((byte[])methodData);
+        //String payload = new String((byte[])methodData);
         System.out.println("test");
-        if ("SendMessages".equals(methodName)) {
-            try {
-                var data = (JSONObject) new JSONParser().parse(payload);
-                sendMessages(((Long) data.get("number")).intValue(), ((Long) data.get("interval")).intValue());
+        switch (methodName) {
+            case "TurnOn":
+                    turnOnLight();
+                    deviceMethodData = new DeviceMethodData(METHOD_SUCCESS, "Executed direct method " + methodName);
+                break;
+            case "TurnOff":
+                turnOffLight();
                 deviceMethodData = new DeviceMethodData(METHOD_SUCCESS, "Executed direct method " + methodName);
-//                } catch (NumberFormatException | ParseException | Exception e) {
-            } catch (Exception e) {
-                System.err.println("Direct method initiated with an invalid parameter!");
-                e.printStackTrace();
-                deviceMethodData = new DeviceMethodData(INVALID_PARAMETER, "Invalid parameter " + payload);
-            }
-        } else {
-            System.err.println("Undefined direct method called!");
-            deviceMethodData = new DeviceMethodData(METHOD_NOT_DEFINED, "Not defined direct method " + methodName);
+                break;
+            default:
+                System.err.println("Undefined direct method called!");
+                deviceMethodData = new DeviceMethodData(METHOD_NOT_DEFINED, "Not defined direct method " + methodName);
+                break;
         }
         return deviceMethodData;
     }
