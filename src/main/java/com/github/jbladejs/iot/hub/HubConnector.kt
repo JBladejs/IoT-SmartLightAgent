@@ -26,7 +26,6 @@ internal class HubConnector(connectionString: String, device : StreetLight) {
             val message = data.serialize()
             val eventMessage = Message(message)
             println("Sending message: $message")
-            eventMessage.setProperty("LightOn", if (data.lightIntensity > 100) "true" else "false")
             val lock = LockObject()
             client.sendEventAsync(eventMessage, EventCallback, lock)
             lock.await()
