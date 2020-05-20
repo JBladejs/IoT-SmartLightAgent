@@ -13,7 +13,7 @@ internal class HubConnector(connectionString: String, device : StreetLight) {
     private val dataCollector = DataCollector(this)
 
     init{
-        println("Starting device...")
+
         try {
             client.open()
             client.subscribeToDeviceMethod(DirectMethodCallback(device), null, DirectMethodStatusCallback, null)
@@ -22,7 +22,6 @@ internal class HubConnector(connectionString: String, device : StreetLight) {
             error("Error when starting device!")
             ex.printStackTrace()
         }
-        println("Device successfully started!")
     }
 
     fun sendMessage(data: TelemetryData, interval: Long) {
