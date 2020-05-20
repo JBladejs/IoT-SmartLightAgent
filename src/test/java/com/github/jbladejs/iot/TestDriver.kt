@@ -3,7 +3,7 @@ package com.github.jbladejs.iot
 import kotlin.random.Random
 
 class TestDriver : Driver {
-    private var light: Boolean = false
+    private var light: Boolean = true
     override val lightIntensity: Double
             get() = Random.nextDouble(0.0,200.0)
     override val energyUsage: Double

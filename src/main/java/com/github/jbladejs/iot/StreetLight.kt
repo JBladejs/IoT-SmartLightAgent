@@ -6,15 +6,17 @@ import java.util.concurrent.Executors
 
 class StreetLight(connectionString: String, private val driver: Driver) {
     private val connector = HubConnector(connectionString, this)
-    private var automaticMode = true
     private val executor = Executors.newFixedThreadPool(1)
     private val runner = SoftwareRunner(this, 1000L)
+    var automaticMode = true
+    var lightTopLimit = 110.0
+    var lightBottomLimit = 100.0
 
     init {
         executor.execute(runner)
     }
 
-    private class SoftwareRunner(device: StreetLight, val interval: Long) : Runnable {
+    private class SoftwareRunner(val device: StreetLight, val interval: Long) : Runnable {
         val driver = device.driver
         val connector = device.connector
         var shuttingDown = false
@@ -22,14 +24,18 @@ class StreetLight(connectionString: String, private val driver: Driver) {
         override fun run() {
             while(true){
                 try {
-                    connector.sendMessage(TelemetryData(driver.energyUsage, driver.lightIntensity), interval)
+                    val lightIntensity = driver.lightIntensity
+                    if (device.automaticMode) {
+                        if (driver.isLightOn() && lightIntensity > device.lightTopLimit) driver.turnOffTheLight()
+                        else if (!driver.isLightOn() && lightIntensity < device.lightBottomLimit) driver.turnOnTheLight()
+                    }
+                    connector.sendMessage(TelemetryData(driver.energyUsage, lightIntensity, driver.isLightOn()), interval)
                 }
                 catch (e: InterruptedException) {
                     if (shuttingDown) {
                         println("Shutdown correctly.")
                         break
                     } else error("Critical error has ben encountered!")
-
                 }
             }
         }
