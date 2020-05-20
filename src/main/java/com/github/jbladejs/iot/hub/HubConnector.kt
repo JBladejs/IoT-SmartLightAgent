@@ -5,8 +5,6 @@ import com.github.jbladejs.iot.tools.LockObject
 import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property
-import kotlin.system.exitProcess
-
 
 internal class HubConnector(connectionString: String, device : StreetLight) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
