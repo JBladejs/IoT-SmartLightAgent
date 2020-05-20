@@ -5,9 +5,8 @@ import com.microsoft.azure.sdk.iot.device.DeviceTwin.DeviceMethodCallback;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.DeviceMethodData;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-public class DirectMethodCallback implements DeviceMethodCallback
+class DirectMethodCallback implements DeviceMethodCallback
 {
     private static final int METHOD_SUCCESS = 200;
     private static final int METHOD_NOT_DEFINED = 404;
@@ -21,7 +20,6 @@ public class DirectMethodCallback implements DeviceMethodCallback
 
     private void sendMessages(int number, int interval) {
         System.out.println("Direct method initiated # Sending messages: " + number);
-        device.sendMessages(number, interval * 1000L);
     }
 
     @Override

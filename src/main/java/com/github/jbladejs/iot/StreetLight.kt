@@ -2,20 +2,42 @@ package com.github.jbladejs.iot
 
 import com.github.jbladejs.iot.hub.HubConnector
 import com.github.jbladejs.iot.tools.TelemetryData
+import java.util.concurrent.Executors
 
 class StreetLight(connectionString: String, private val driver: Driver) {
     private val connector = HubConnector(connectionString, this)
+    private var automaticMode = true
+    private val executor = Executors.newFixedThreadPool(1)
+    private val runner = SoftwareRunner(this, 1000L)
 
-    fun sendMessages(number: Int, interval: Long) {
-        println("Sending messages...")
-        for (i in 1..number) {
-            connector.sendMessage(TelemetryData(driver.getEnergyUsage(), driver.getEnergyUsage()), interval)
+    init {
+        executor.execute(runner)
+    }
+
+    private class SoftwareRunner(device: StreetLight, val interval: Long) : Runnable {
+        val driver = device.driver
+        val connector = device.connector
+        var shuttingDown = false
+
+        override fun run() {
+            while(true){
+                try {
+                    connector.sendMessage(TelemetryData(driver.energyUsage, driver.lightIntensity), interval)
+                }
+                catch (e: InterruptedException) {
+                    if (shuttingDown) {
+                        println("Shutdown correctly.")
+                        break
+                    } else error("Critical error has ben encountered!")
+
+                }
+            }
         }
-        println("Messages successfully sent!")
     }
 
     fun closeHubConnection() {
+        runner.shuttingDown = true
+        executor.shutdownNow()
         connector.closeConnection()
     }
-
 }

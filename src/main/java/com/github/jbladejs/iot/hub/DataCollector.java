@@ -2,7 +2,7 @@ package com.github.jbladejs.iot.hub;
 
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Device;
 
-public class DataCollector extends Device {
+class DataCollector extends Device {
     HubConnector connector;
 
     public DataCollector(HubConnector connector) {

@@ -5,6 +5,7 @@ import com.github.jbladejs.iot.tools.LockObject
 import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property
+import kotlin.system.exitProcess
 
 
 internal class HubConnector(connectionString: String, device : StreetLight) {
@@ -25,14 +26,14 @@ internal class HubConnector(connectionString: String, device : StreetLight) {
     }
 
     fun sendMessage(data: TelemetryData, interval: Long) {
-        val message = data.serialize()
-        val eventMessage = Message(message)
-        println("Sending message: $message")
-        eventMessage.setProperty("LightOn", if (data.lightIntensity > 100) "true" else "false")
-        val lock = LockObject()
-        client.sendEventAsync(eventMessage, EventCallback, lock)
-        lock.await()
-        Thread.sleep(interval)
+            val message = data.serialize()
+            val eventMessage = Message(message)
+            println("Sending message: $message")
+            eventMessage.setProperty("LightOn", if (data.lightIntensity > 100) "true" else "false")
+            val lock = LockObject()
+            client.sendEventAsync(eventMessage, EventCallback, lock)
+            lock.await()
+            Thread.sleep(interval)
     }
 
     fun closeConnection() {
