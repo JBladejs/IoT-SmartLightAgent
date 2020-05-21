@@ -52,7 +52,8 @@ class StreetLight(connectionString: String, private val driver: Driver) {
                         if (driver.isLightOn() && lightIntensity > device.lightTopLimit) driver.turnOffTheLight()
                         else if (!driver.isLightOn() && lightIntensity < device.lightBottomLimit) driver.turnOnTheLight()
                     }
-                    connector.sendMessage(TelemetryData(driver.energyUsage, lightIntensity, driver.isLightOn()), interval)
+                    connector.sendMessage(TelemetryData(driver.energyUsage, lightIntensity, driver.isLightOn()))
+                    Thread.sleep(interval)
                 }
                 catch (e: InterruptedException) {
                     if (shuttingDown) {
