@@ -2,6 +2,7 @@ package com.github.jbladejs.iot
 
 import com.github.jbladejs.iot.hub.HubConnector
 import com.github.jbladejs.iot.tools.TelemetryData
+import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
 class StreetLight(connectionString: String, private val driver: Driver) {
@@ -14,6 +15,7 @@ class StreetLight(connectionString: String, private val driver: Driver) {
                 field = value
                 if (value) connector.changeProperty("mode", "auto")
                 else connector.changeProperty("mode", "manual")
+                connector.changeProperty("lastModeChange", LocalDateTime.now().toString())
             }
         }
     var lightTopLimit = 110.0
