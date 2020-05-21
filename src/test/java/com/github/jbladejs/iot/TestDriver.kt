@@ -18,11 +18,7 @@ class TestDriver : Driver {
                         Random.nextDouble(80.0, 100.0)
                     }
                 else
-                    if (!criticalStatus && Random.nextInt(0,breakdownFactor) <= 100) Random.nextDouble(0.0, 1.0)
-                    else {
-                        criticalStatus = true
-                        Random.nextDouble(40.0, 60.0)
-                    }
+                    Random.nextDouble(0.0, 1.0)
             }
     override fun isLightOn(): Boolean = light
     override fun turnOnTheLight() {
