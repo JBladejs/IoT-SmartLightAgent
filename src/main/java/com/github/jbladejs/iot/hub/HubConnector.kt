@@ -25,7 +25,7 @@ internal class HubConnector(connectionString: String, val device : StreetLight) 
     fun sendMessage(data: TelemetryData) {
         val message = data.serialize()
         val eventMessage = Message(message)
-        println("Sending message: $message")
+        //println("Sending message: $message")
         val lock = LockObject()
         client.sendEventAsync(eventMessage, EventCallback, lock)
         lock.await()
@@ -43,7 +43,7 @@ internal class HubConnector(connectionString: String, val device : StreetLight) 
 
     private object EventCallback : IotHubEventCallback {
         override fun execute(status: IotHubStatusCode, context: Any) {
-            println("IoT Hub responded to message with status: " + status.name)
+            //println("IoT Hub responded to message with status: " + status.name)
             val lock = context as LockObject
             lock.signal()
         }
@@ -51,7 +51,7 @@ internal class HubConnector(connectionString: String, val device : StreetLight) 
 
     private object DirectMethodStatusCallback : IotHubEventCallback {
         override fun execute(status: IotHubStatusCode, context: Any) {
-            println("Direct method # IoT Hub responded to device method acknowledgement with status: " + status.name)
+            //println("Direct method # IoT Hub responded to device method acknowledgement with status: " + status.name)
         }
     }
 }

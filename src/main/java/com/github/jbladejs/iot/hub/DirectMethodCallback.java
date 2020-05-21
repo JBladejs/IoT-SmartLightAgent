@@ -12,7 +12,7 @@ class DirectMethodCallback implements DeviceMethodCallback
     private static final int METHOD_NOT_DEFINED = 404;
     private static final int INVALID_PARAMETER = 400;
 
-    private StreetLight device;
+    private final StreetLight device;
 
     public DirectMethodCallback(StreetLight device){
         this.device = device;
@@ -31,20 +31,21 @@ class DirectMethodCallback implements DeviceMethodCallback
     {
         DeviceMethodData deviceMethodData;
         //String payload = new String((byte[])methodData);
-        System.out.println("test");
         switch (methodName) {
-            case "TurnOn":
-                    turnOnLight();
-                    deviceMethodData = new DeviceMethodData(METHOD_SUCCESS, "Executed direct method " + methodName);
-                break;
-            case "TurnOff":
-                turnOffLight();
+            case "TurnOn" -> {
+                turnOnLight();
+                System.out.println("Turned on the light.");
                 deviceMethodData = new DeviceMethodData(METHOD_SUCCESS, "Executed direct method " + methodName);
-                break;
-            default:
+            }
+            case "TurnOff" -> {
+                turnOffLight();
+                System.out.println("Turned off the light.");
+                deviceMethodData = new DeviceMethodData(METHOD_SUCCESS, "Executed direct method " + methodName);
+            }
+            default -> {
                 System.err.println("Undefined direct method called!");
                 deviceMethodData = new DeviceMethodData(METHOD_NOT_DEFINED, "Not defined direct method " + methodName);
-                break;
+            }
         }
         return deviceMethodData;
     }
