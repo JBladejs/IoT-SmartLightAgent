@@ -22,10 +22,9 @@ internal class HubConnector(connectionString: String, val device : StreetLight) 
         }
     }
 
-    fun sendMessage(data: TelemetryData, level: String) {
+    fun sendMessage(data: TelemetryData) {
         val message = data.serialize()
         val eventMessage = Message(message)
-        eventMessage.setProperty("level", level)
         println("Sending message: $message")
         val lock = LockObject()
         client.sendEventAsync(eventMessage, EventCallback, lock)
