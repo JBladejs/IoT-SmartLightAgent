@@ -50,11 +50,11 @@ class StreetLight(connectionString: String, private val driver: Driver) {
             while(true){
                 try {
                     val lightIntensity = driver.lightIntensity
-                    val energyUsage = driver.energyUsage
                     if (device.automaticMode) {
                         if (driver.isLightOn() && lightIntensity > device.lightTopLimit) driver.turnOffTheLight()
                         else if (!driver.isLightOn() && lightIntensity < device.lightBottomLimit) driver.turnOnTheLight()
                     }
+                    val energyUsage = driver.energyUsage
                     connector.sendMessage(TelemetryData(energyUsage, lightIntensity, driver.isLightOn()))
                     Thread.sleep(interval)
                 }
