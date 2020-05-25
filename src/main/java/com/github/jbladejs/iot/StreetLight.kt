@@ -11,25 +11,25 @@ class StreetLight(connectionString: String, private val driver: Driver) {
     private val runner : SoftwareRunner
     var automaticMode = true
         set(value) {
+            if (value) connector.changeProperty("mode", "auto")
+            else connector.changeProperty("mode", "manual")
             if (value != field) {
                 field = value
-                if (value) connector.changeProperty("mode", "auto")
-                else connector.changeProperty("mode", "manual")
                 connector.changeProperty("lastModeChange", LocalDateTime.now().toString())
             }
         }
     var lightTopLimit = 110.0
         set(value) {
+            connector.changeProperty("lightTopLimit", value)
             if (value != field) {
                 field = value
-                connector.changeProperty("lightTopLimit", value)
             }
         }
     var lightBottomLimit = 100.0
         set(value) {
+            connector.changeProperty("lightBottomLimit", value)
             if (value != field) {
                 field = value
-                connector.changeProperty("lightBottomLimit", value)
             }
         }
 
