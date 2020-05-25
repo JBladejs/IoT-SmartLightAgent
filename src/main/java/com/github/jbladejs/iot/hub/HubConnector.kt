@@ -6,6 +6,7 @@ import com.github.jbladejs.iot.tools.TelemetryData
 import com.microsoft.azure.sdk.iot.device.*
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property
 
+@Suppress("DEPRECATION")
 internal class HubConnector(connectionString: String, val device : StreetLight) {
     private var client = DeviceClient(connectionString, IotHubClientProtocol.MQTT)
     private val dataCollector = DataCollector(this)
@@ -25,6 +26,8 @@ internal class HubConnector(connectionString: String, val device : StreetLight) 
     fun sendMessage(data: TelemetryData) {
         val message = data.serialize()
         val eventMessage = Message(message)
+        eventMessage.contentEncoding = "utf-8"
+        eventMessage.contentType = "application/json"
         println("Sending message: $message")
         val lock = LockObject()
         client.sendEventAsync(eventMessage, EventCallback, lock)
