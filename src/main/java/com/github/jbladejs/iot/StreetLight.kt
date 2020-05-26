@@ -69,12 +69,12 @@ class StreetLight(connectionString: String, private val driver: Driver) {
     }
 
     fun turnOn() {
-        automaticMode = false
+        //automaticMode = false
         driver.turnOnTheLight()
     }
 
     fun turnOff() {
-        automaticMode = false
+        //automaticMode = false
         driver.turnOffTheLight()
     }
 
