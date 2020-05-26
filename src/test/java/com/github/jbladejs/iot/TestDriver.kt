@@ -3,6 +3,7 @@ package com.github.jbladejs.iot
 import kotlin.random.Random
 
 class TestDriver : Driver {
+    private var increasing = true
     private var criticalStatus = false
     private var breakdownFactor = 0
     private var time = 0
@@ -10,8 +11,11 @@ class TestDriver : Driver {
     override val lightIntensity: Double
             get() {
                 val value = Random.nextDouble(time.toDouble(), time.toDouble() + 20.0)
-                if (time >= 180) time = 0
-                else time++
+                when {
+                    time >= 180 -> increasing = false
+                    increasing -> time += 5
+                    else -> time -= 5
+                }
                 return value
             }
     override val energyUsage: Double
