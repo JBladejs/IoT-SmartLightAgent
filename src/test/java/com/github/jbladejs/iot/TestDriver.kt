@@ -5,9 +5,15 @@ import kotlin.random.Random
 class TestDriver : Driver {
     private var criticalStatus = false
     private var breakdownFactor = 0
+    private var time = 0
     private var light: Boolean = true
     override val lightIntensity: Double
-            get() = Random.nextDouble(0.0,200.0)
+            get() {
+                val value = Random.nextDouble(time.toDouble(), time.toDouble() + 20.0)
+                if (time >= 180) time = 0
+                else time++
+                return value
+            }
     override val energyUsage: Double
             get() {
                 breakdownFactor++
