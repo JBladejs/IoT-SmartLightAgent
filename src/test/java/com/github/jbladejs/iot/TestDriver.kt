@@ -24,7 +24,7 @@ class TestDriver : Driver {
                 return if (light)
                     if (Random.nextInt(0,breakdownFactor) <= 100) Random.nextDouble(50.0, 60.0)
                     else {
-                        breakdownFactor = 0
+                        breakdownFactor = 40
                         Random.nextDouble(80.0, 100.0)
                     }
                 else
