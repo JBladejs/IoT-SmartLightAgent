@@ -4,27 +4,27 @@ import kotlin.random.Random
 
 class TestDriver : Driver {
     private var increasing = true
-    private var criticalStatus = false
     private var breakdownFactor = 0
-    private var time = 0
+    private var time = 5
     private var light: Boolean = true
     override val lightIntensity: Double
             get() {
-                val value = Random.nextDouble(time.toDouble(), time.toDouble() + 20.0)
-                when {
-                    time >= 180 -> increasing = false
-                    increasing -> time += 5
-                    else -> time -= 5
+                if (increasing) {
+                    time += 5
+                    if (time >= 180) increasing = false
+                } else {
+                    time -= 5
+                    if (time <= 10) increasing = true
                 }
-                return value
+                return Random.nextDouble(time.toDouble(), time.toDouble() + 20.0)
             }
     override val energyUsage: Double
             get() {
                 breakdownFactor++
                 return if (light)
-                    if (!criticalStatus && Random.nextInt(0,breakdownFactor) <= 100) Random.nextDouble(50.0, 60.0)
+                    if (Random.nextInt(0,breakdownFactor) <= 100) Random.nextDouble(50.0, 60.0)
                     else {
-                        criticalStatus = true
+                        breakdownFactor = 0
                         Random.nextDouble(80.0, 100.0)
                     }
                 else
